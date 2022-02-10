@@ -1,47 +1,73 @@
+const STATUS = {
+    TO_DO: "To Do",
+    DONE: "Done",
+    IN_PROGRESS: "In Progress",
+};
+
+const DEFAULT_STATUS = STATUS.TO_DO;
+
 const list = {
-    "create a task": "In Progress",
-    "make a bed": "Done",
-    "write a post": "To Do",
+    "create a task": STATUS.IN_PROGRESS,
+    "make a bed": STATUS.DONE,
+    "write a post": STATUS.TO_DO,
+};
+
+function checkValidStatus (status) {
+   const isValidStatus = status in STATUS;  
+   if (!isValidStatus) {
+       console.log("Incorrect status!");
+       return;
+   }
 }
 
 function changeStatus(task, status) {
     if (task in list) {
         list[task] = status;
+    } else {
+        console.log("This task was not found");
     }
 }
 
 function addTask(task) {
-    list[task] = "To Do";
+    if (task in list) {
+        console.log("This task already exist!")
+    } else {
+        list[task] = DEFAULT_STATUS;
+    } 
 }
 
 function deleteTask(task) {
-    delete list[task];
+    if (task in list) {
+        delete list[task];
+    } else {
+        console.log("This task was not found");
+    }
 }
 
 function showList() {
-    let toDo = "";
-    let inProgress = "";
-    let done = "";
+    const tasks = {
+        [STATUS.DONE]: "",
+        [STATUS.TO_DO]: "",
+        [STATUS.IN_PROGRESS]: "",
+    };
     
     for (let key in list) {
-    switch (list[key]) {
-        case "To Do":
-            toDo += "\"" + key + "\"," + "\n "
-            break;
-        case "In Progress":
-            inProgress += "\"" + key + "\"" + "\n"
-            break;
-        case "Done":
-            done += "\"" + key + "\"" + "\n"
-            break;
-    }
-    }
+        tasks[list[key]] += `\"${key}\",\n`;
+    };
+
+    if (tasks[STATUS.TO_DO] === "") { 
+        tasks[STATUS.TO_DO] = "-" 
+    };
+   
+    if (tasks[STATUS.IN_PROGRESS] === "") {
+        tasks[STATUS.IN_PROGRESS] = "-" 
+    };
+   
+    if (tasks[STATUS.DONE] === "") { 
+        tasks[STATUS.DONE] = "-" 
+    };
     
-    if (toDo === "") { toDo = "-" };
-    if (inProgress === "") { inProgress = "-" };
-    if (done === "") { done = "-" };
-    
-    console.log("To Do:\n" + " " + toDo + "\n" + "In Progress:\n" + " " + inProgress + "\n" + "Done:\n" + " " + done);
+    console.log(`To Do:\n ${tasks[STATUS.TO_DO]}\n In Progress:\n ${tasks[STATUS.IN_PROGRESS]}\n Done:\n ${tasks[STATUS.DONE]}`);
 }
 
 addTask("make todo-list on js");
@@ -51,4 +77,4 @@ addTask("watch Artem's stream");
 changeStatus("make todo-list on js", "In Progress");
 deleteTask("make a bed");
 changeStatus("create a task", "Done");
-showList(); 
+showList();
